@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Canvas player demo</title>
+    <link rel="stylesheet" type="text/css" href="libs/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row col-xs-4 text-center">
+            <h4>images play 15fps</h4>
+            <canvas></canvas>
+            <a class="btn btn-primary">播放</a>
+            <a class="btn btn-warning">暂停</a>
+        </div>
+        <div class="row col-xs-4 text-center">
+            <h4>images play 25fps</h4>
+            <canvas></canvas>
+            <a class="btn btn-primary">播放</a>
+            <a class="btn btn-warning">暂停</a>
+        </div>
+        <div class="row col-xs-4 text-center">
+            <h4>video play</h4>
+            <canvas></canvas>
+            <a class="btn btn-primary">播放</a>
+            <a class="btn btn-warning">暂停</a>
+        </div>
+        <div class="hidden">
+            <video src="resources/video/SampleVideo1.mp4" controls type="video/mp4">
+            </video>
+        </div>
+    </div>
+</body>
+<script src="libs/js/jquery.min.js"></script>
+<script src="libs/js/easeljs.min.js"></script>
+<script src="libs/js/preloadjs-0.6.2.min.js"></script>
+<script src="canvas-player.js"></script>
+
+</html>
