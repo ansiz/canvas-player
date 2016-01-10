@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <meta charset="UTF-8">
     <title>Canvas player demo</title>
     <link rel="stylesheet" type="text/css" href="../libs/css/bootstrap.min.css">
 </head>
@@ -16,14 +17,14 @@
         <div class="col-sm-4 col-xs-12 text-center">
             <h3>Frames images play</h3>
             <p>每一张图片就是视频的一帧</p>
-            <canvas id="canvas-player"></canvas>
+            <canvas id="canvas1"></canvas>
             <a class="btn btn-primary" id="btn-images-play">播放</a>
             <a class="btn btn-default" id="btn-images-pause">暂停</a>
         </div>
         <div class="col-sm-4 col-xs-12 text-center">
             <h3>Big frames images play</h3>
             <p>每一张图片就是视频的N帧</p>
-            <canvas id="canvas2" width="320" height="240"></canvas>
+            <canvas id="canvas2"></canvas>
             <a class="btn btn-primary" id="btn-big-play">播放</a>
             <a class="btn btn-default" id="btn-big-pause">暂停</a>
         </div>
@@ -38,7 +39,7 @@
             <h2>Origin video</h2>
             <video id="video" src="resources/video/SampleVideo1.mp4" controls type="video/mp4">
             </video>
-            <audio id="audio"></audio>
+            <audio id="audio" src="resources/audio/audio.aac"></audio>
         </div>
     </div>
 </body>
