@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Canvas player demo</title>
+    <link rel="stylesheet" type="text/css" href="../libs/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="page-header" id="content" tabindex="-1">
+            <div class="container">
+                <h1>Canvas-player demo</h1>
+            </div>
+        </div>
+        <div class="col-sm-4 col-xs-12 text-center">
+            <h3>Frames images play</h3>
+            <p>每一张图片就是视频的一帧</p>
+            <canvas id="canvas-player"></canvas>
+            <a class="btn btn-primary" id="btn-images-play">播放</a>
+            <a class="btn btn-default" id="btn-images-pause">暂停</a>
+        </div>
+        <div class="col-sm-4 col-xs-12 text-center">
+            <h3>Big frames images play</h3>
+            <p>每一张图片就是视频的N帧</p>
+            <canvas id="canvas2" width="320" height="240"></canvas>
+            <a class="btn btn-primary" id="btn-big-play">播放</a>
+            <a class="btn btn-default" id="btn-big-pause">暂停</a>
+        </div>
+        <div class="col-sm-4 col-xs-12 text-center">
+            <h3>Video play</h3>
+            <p>Video采用视频作为源进行播放</p>
+            <canvas id="canvas3" width="320" height="240"></canvas>
+            <a class="btn btn-primary" id="btn-video-play">播放</a>
+            <a class="btn btn-default" id="btn-video-pause">暂停</a>
+        </div>
+        <div class="col-sm-4 col-sm-offset-4 text-center">
+            <h2>Origin video</h2>
+            <video id="video" src="resources/video/SampleVideo1.mp4" controls type="video/mp4">
+            </video>
+            <audio id="audio"></audio>
+        </div>
+    </div>
+</body>
+<script src="../libs/js/jquery-1.12.0.min.js"></script>
+<script src="../libs/js/easeljs.min.js"></script>
+<script src="../libs/js/preloadjs-0.6.2.min.js"></script>
+<script src="../dist/canvas-player.js"></script>
+<script src="js/sample.js">
+</script>
+
+</html>
