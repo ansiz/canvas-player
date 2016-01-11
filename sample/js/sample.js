@@ -10,14 +10,23 @@ $(document).ready(function () {
 		height: 240,
 		type: "images",
 		selector: 'canvas1',
-		resources: {
+		resources: [{
+			type: "images",
 			src: "resources/images",
 			count: 341,
 			bit: 3,
 			wildcard: "out_",
 			fileType: "jpg",
 			manifest: []
-		}
+		}, {
+			type: "images",
+			src: "resources/images",
+			count: 341,
+			bit: 3,
+			wildcard: "out_",
+			fileType: "jpg",
+			manifest: []
+		}]
 	});
 	// canvasPlayer1 = new cp.initPlayer({
 	// 	id: 'canvasPlayer2',

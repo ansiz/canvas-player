@@ -7,20 +7,20 @@
 				width: 320,
 				height: 240,
 				scale: 1,
-				type: 'images', //images ,bigImg or video
 				selector: 'canvas-player',
 				audio: 'audio',
 				poster: '',
 				loop: false,
 				buffer: 50, //define how many frames should be buffered
-				resources: {
+				resources: [{
+					type: 'images', //images ,bigImg or video
 					src: "",
 					count: 0,
 					bit: 0,
 					wildcard: "",
 					fileType: "",
 					manifest: [],
-				}
+				}]
 			},
 			this.status = {
 				loaded: false,
@@ -28,8 +28,8 @@
 				played: false,
 				paused: false,
 				end: function () {
-					console.log('video end');
-					cp.player.status.playedTimes++;
+					// console.log('video end');
+					// cp.player.status.playedTimes++;
 				},
 				last: 0,
 				current: 0,
@@ -57,7 +57,8 @@
 		load: function () {
 			if (cp.player.status.loaded) return;
 			cp.player.status.loaded = true;
-			manifestGen(this._opts.resources);
+			for (var i = 0; i < this._opts.resources.length; i++)
+				manifestGen(this._opts.resources[i]);
 			this.preload = new createjs.LoadQueue(true);
 			this.preload.on('fileload', this.handleFileLoad);
 			this.preload.on('progress', this.handleLoadProgress);
@@ -67,31 +68,34 @@
 				console.error("Has no specified resources!");
 				return;
 			}
-			this.preload.loadManifest(this._opts.resources.manifest);
+			for (var i = 0; i < this._opts.resources.length; i++)
+				this.preload.loadManifest(this._opts.resources[i].manifest);
 			return this;
 		},
 		play: function (index) {
 			var p = cp.player;
-			switch (p._opts.type) {
+
+			p.audio = document.getElementById(p._opts.audio);
+			if (p.status.playing === true) return;
+			switch (p._opts.resources[0].type) {
 			case 'images':
 				if (index) {
 					console.log('call play at ' + this.status.last);
 				} else {
 					var ctx = p.canvas.getContext('2d');
 					p.timer = window.setInterval(function () {
-						if (p.status.current >= p._opts.resources.count) {
+						if (p.status.current >= p._opts.resources[0].count) {
 							p.pause();
-							p.status.end();
+							p.ended();
 							return;
 						}
-						var _image = p.preload.getResult(p._opts.resources.manifest[p.status.current++].id);
+						var _image = p.preload.getResult(p._opts.resources[0].manifest[p.status.current++].id);
 						var images = new createjs.Bitmap(_image);
 						ctx.drawImage(images.image, 0, 0, p.canvas.width, p.canvas.height);
 					}, 1000 / p._opts.fps);
 					p.audio.play();
 					p.status.played = true;
 					p.status.playing = true;
-
 				}
 				break;
 			case 'bigImg':
@@ -105,11 +109,22 @@
 		},
 		pause: function () {
 			this.status.last = this.status.current;
+			this.status.playing = false;
 			this.audio.pause();
 			window.clearInterval(this.timer);
 		},
 		buffering: function () {
 
+		},
+		ended: function () {
+			this.audio.currentTime = 0;
+			if (this._opts.resources.length > 1) {
+				this._opts.resources.splice(0, 1);
+				this.status.current = 0;
+				this.play();
+				return
+			};
+			console.log('video ended');
 		},
 		init: function () {
 			this.canvas = document.getElementById(this._opts.selector);
@@ -122,7 +137,6 @@
 			this.stage = new createjs.Stage(canvas);
 			this.stage.scaleX = this._opts.scale;
 			this.stage.scaleY = this._opts.scale;
-			this.audio = document.getElementById(this._opts.audio);
 		},
 		handleFileLoad: function () {
 
