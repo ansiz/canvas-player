@@ -4,24 +4,44 @@ var canvas, video, audio, timer, canvasPlayer, canvasPlayer1;
 $(document).ready(function () {
 	canvas = document.getElementById('canvas3');
 	video = document.getElementById('video');
+	// images test
+	// canvasPlayer = new cp.initPlayer({
+	// 	id: 'canvasPlayer1',
+	// 	width: 320,
+	// 	height: 240,
+	// 	type: "images",
+	// 	selector: 'canvas1',
+	// 	resources: [{
+	// 		type: "images",
+	// 		src: "resources/images",
+	// 		count: 341,
+	// 		bit: 3,
+	// 		wildcard: "out_",
+	// 		fileType: "jpg",
+	// 		manifest: []
+	// 	}, {
+	// 		type: "images",
+	// 		src: "resources/images",
+	// 		count: 341,
+	// 		bit: 3,
+	// 		wildcard: "out_",
+	// 		fileType: "jpg",
+	// 		manifest: []
+	// 	}]
+	// });
+
+	//bigImage test
 	canvasPlayer = new cp.initPlayer({
 		id: 'canvasPlayer1',
 		width: 320,
 		height: 240,
-		type: "images",
-		selector: 'canvas1',
+		selector: 'canvas2',
 		resources: [{
-			type: "images",
-			src: "resources/images",
-			count: 341,
-			bit: 3,
-			wildcard: "out_",
-			fileType: "jpg",
-			manifest: []
-		}, {
-			type: "images",
-			src: "resources/images",
-			count: 341,
+			type: "bigImg",
+			col:10,
+			row:10,
+			src: "resources/images/big",
+			count: 3,
 			bit: 3,
 			wildcard: "out_",
 			fileType: "jpg",
@@ -56,6 +76,15 @@ $(document).ready(function () {
 	});
 
 	$('#btn-images-pause').click(function () {
+		canvasPlayer.pause();
+	});
+
+	$('#btn-big-play').click(function () {
+		canvasPlayer.load();
+		canvasPlayer.play();
+	});
+
+	$('#btn-big-pause').click(function () {
 		canvasPlayer.pause();
 	});
 	// $('#btn-big-play').click(function () {

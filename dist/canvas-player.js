@@ -34,6 +34,9 @@
 				},
 				last: 0,
 				current: 0,
+				currentCol: 0,
+				currentRow: 0,
+				counter: 0,
 				total: 0,
 				error: null,
 				loadProgress: 0,
@@ -73,7 +76,7 @@
 				console.error("Has no specified resources!");
 				return;
 			}
-			for (var i = 0; i < this._opts.resources.length; i++)
+			for (i = 0; i < this._opts.resources.length; i++)
 				this.preload.loadManifest(this._opts.resources[i].manifest);
 			if (typeof callback === "function") {
 				callback();
@@ -114,34 +117,44 @@
 				}
 				break;
 			case 'bigImg':
-				var c = p.resources[0]; //c means config
-				var s = p.status;
+				var c = p._opts.resources[0]; //c means config
+				p._opts.buffer = 1;
 				if (index) {
 					console.log('call play at ' + this.status.last);
 				} else {
 					var ctx = p.canvas.getContext('2d');
-					p._image = p.preload.getResult(p._opts.resources[0].manifest[s.current + p.buffer].id);
-					if (p._image === undefined) {
-						p.buffering();
-						return;
+					//init counter
+					if (s.current === 0) {
+						s.currentY = 0;
+						s.currentX = 0;
 					}
-					p._image = p.preload.getResult(p._opts.resources[0].manifest[s.current++].id);
-					var images = new createjs.Bitmap(p._image);
-					p.timer = window.setInterval(function () {
-						if (s.current >= p._opts.resources[0].count) {
-							p.pause();
-							p.ended();
+					if (s.current + 1 < p._opts.resources[0].manifest.length) {
+						p._image = p.preload.getResult(p._opts.resources[0].manifest[s.current + 1].id);
+						if (p._image === undefined) {
+							p.buffering();
 							return;
 						}
-						s.currentX += c.width;
-						p.stauts.currentCol++;
-						if (s.currentCol > c.col) {
-							s.currentCol = 0;
-							s.currentX = 0
-							s.currentRow++;
-							p.currentY += c.height
+					}
+					p.timer = window.setInterval(function () {
+						if (cp.player.status.current >= c.count) {
+							cp.player.pause();
+							cp.player.ended();
+							return;
 						}
-						ctx.drawImage(images.image, x, y, p.canvas.width, p.canvas.height);
+
+						var fx = Math.floor(cp.player.status.counter % c.col) * cp.player._opts.width,
+							fy = Math.floor(cp.player.status.counter / c.col) * cp.player._opts.height;
+
+						if (fy > cp.player._opts.height * c.row) {
+							s.current++;
+							cp.player.status.counter = 0;
+						}
+						p._image = p.preload.getResult(p._opts.resources[0].manifest[s.current].id);
+						var images = new createjs.Bitmap(p._image);
+						ctx.clearRect(0, 0, cp.player._opts.width, cp.player._opts.height); // clear frame
+						ctx.drawImage(images.image, fx, fy, cp.player._opts.width, cp.player._opts.height, 0, 0, cp.player._opts.width, cp.player._opts.height);
+
+						cp.player.status.counter++;
 					}, 1000 / p._opts.fps);
 					p.audio.play();
 					s.played = true;
@@ -185,10 +198,11 @@
 			this.audio.currentTime = 0;
 			if (this._opts.resources.length > 1) {
 				this._opts.resources.splice(0, 1);
-				this.status.current = 0;
 				this.play();
 				return;
 			}
+			this.status.current = 0;
+			console.log('ended');
 			if (typeof callback === "function") {
 				callback();
 			}
