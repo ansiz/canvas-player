@@ -17,7 +17,7 @@ mkdir frames
 ffmpeg -i SampleVideo.mp4 -vf scale=640:-1 -r 24 frames/%04d.jpg
 ```
 
-Then, use ImageMagicks [montage](http://www.imagemagick.org/script/montage.php) to stich all the frames into one big image:
+If you want to play sprite images in canvas-player,you should use ImageMagicks [montage](http://www.imagemagick.org/script/montage.php) to stich all the frames into one big image:
 
 ```
 montage -border 0 -geometry 320x -tile 10x -quality 60% frames/*.jpg output.jpg
