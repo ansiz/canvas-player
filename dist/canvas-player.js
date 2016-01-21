@@ -198,6 +198,7 @@
 			this.audio.currentTime = 0;
 			if (this._opts.resources.length > 1) {
 				this._opts.resources.splice(0, 1);
+				this.status.current = 0;
 				this.play();
 				return;
 			}
