@@ -43,6 +43,7 @@
 				loadComplete: false,
 				playedTimes: 0,
 			},
+			this.cache = {},
 			this.preload = {},
 			this._opts = merge(this.defaultOpts, params),
 			this._image = {},
@@ -86,80 +87,82 @@
 		play: function (index, callback) {
 			var p = cp.player;
 			var s = p.status;
-			p.audio = document.getElementById(p._opts.audio);
+			p.audio = document.getElementById(p._opts.audio + index);
+			if (!index) {
+				index = 0;
+			}
+			p.now = p._opts.resources[index];
+			p.videoid = index;
 			if (p.status.playing === true) return;
-			switch (p._opts.resources[0].type) {
+			switch (p.now.type) {
 			case 'images':
-				if (index) {
-					console.log('call play at ' + this.status.last);
-				} else {
-					var ctx = p.canvas.getContext('2d');
-					p.timer = window.setInterval(function () {
-						if (p.status.current >= p._opts.resources[0].count) {
-							p.pause();
-							p.ended();
-							return;
-						}
-						if (s.current + p._opts.buffer < p._opts.resources[0].manifest.length) {
-							p._image = p.preload.getResult(p._opts.resources[0].manifest[s.current + p._opts.buffer].id);
-							if (p._image === undefined) {
-								p.buffering();
-								return;
-							}
-						}
-						p._image = p.preload.getResult(p._opts.resources[0].manifest[p.status.current++].id);
-						var images = new createjs.Bitmap(p._image);
-						ctx.drawImage(images.image, 0, 0, p.canvas.width, p.canvas.height);
-					}, 1000 / p._opts.fps);
-					p.audio.play();
-					p.status.played = true;
-					p.status.playing = true;
-				}
-				break;
-			case 'bigImg':
-				var c = p._opts.resources[0]; //c means config
-				p._opts.buffer = 1;
-				if (index) {
-					console.log('call play at ' + this.status.last);
-				} else {
-					var ctx = p.canvas.getContext('2d');
-					//init counter
-					if (s.current === 0) {
-						s.currentY = 0;
-						s.currentX = 0;
+				var ctx = p.canvas.getContext('2d');
+				p.timer = window.setInterval(function () {
+					if (p.status.current >= p.now.count) {
+						p.pause();
+						p.ended();
+						return;
 					}
-					if (s.current + 1 < p._opts.resources[0].manifest.length) {
-						p._image = p.preload.getResult(p._opts.resources[0].manifest[s.current + 1].id);
+					if (s.current + p._opts.buffer < p.now.manifest.length) {
+						p._image = p.preload.getResult(p.now.manifest[s.current + p._opts.buffer].id);
 						if (p._image === undefined) {
 							p.buffering();
 							return;
 						}
 					}
-					p.timer = window.setInterval(function () {
-						if (cp.player.status.current >= c.count) {
-							cp.player.pause();
-							cp.player.ended();
-							return;
-						}
-
-						var fx = Math.floor(cp.player.status.counter % c.col) * cp.player._opts.width,
-							fy = Math.floor(cp.player.status.counter / c.col) * cp.player._opts.height;
-
-						if (fy > cp.player._opts.height * c.row) {
-							s.current++;
-							cp.player.status.counter = 0;
-						}
-						p._image = p.preload.getResult(p._opts.resources[0].manifest[s.current].id);
-						var images = new createjs.Bitmap(p._image);
-						ctx.clearRect(0, 0, cp.player._opts.width, cp.player._opts.height); // clear frame
-						ctx.drawImage(images.image, fx, fy, cp.player._opts.width, cp.player._opts.height, 0, 0, cp.player._opts.width, cp.player._opts.height);
-
-						cp.player.status.counter++;
-					}, 1000 / p._opts.fps);
+					p._image = p.preload.getResult(p.now.manifest[p.status.current++].id);
+					var images = new createjs.Bitmap(p._image);
+					ctx.drawImage(images.image, 0, 0, p.canvas.width, p.canvas.height);
+				}, 1000 / p._opts.fps);
+				if (p.audio) {
 					p.audio.play();
-					s.played = true;
-					s.playing = true;
 				}
+				p.status.played = true;
+				p.status.playing = true;
+				break;
+			case 'bigImg':
+				var c = p.now; //c means config
+				p._opts.buffer = 1;
+				var ctx = p.canvas.getContext('2d');
+				//init counter
+				if (s.current === 0) {
+					s.currentY = 0;
+					s.currentX = 0;
+				}
+				if (s.current + 1 < p.now.manifest.length) {
+					p._image = p.preload.getResult(p.now.manifest[s.current + 1].id);
+					if (p._image === undefined) {
+						p.buffering();
+						return;
+					}
+				}
+				p.timer = window.setInterval(function () {
+					if (cp.player.status.current >= c.count) {
+						cp.player.pause();
+						cp.player.ended();
+						return;
+					}
+
+					var fx = Math.floor(cp.player.status.counter % c.col) * cp.player._opts.width,
+						fy = Math.floor(cp.player.status.counter / c.col) * cp.player._opts.height;
+
+					if (fy > cp.player._opts.height * c.row) {
+						s.current++;
+						cp.player.status.counter = 0;
+					}
+					p._image = p.preload.getResult(p.now.manifest[s.current].id);
+					var images = new createjs.Bitmap(p._image);
+					ctx.clearRect(0, 0, cp.player._opts.width, cp.player._opts.height); // clear frame
+					ctx.drawImage(images.image, fx, fy, cp.player._opts.width, cp.player._opts.height, 0, 0, cp.player._opts.width, cp.player._opts.height);
+
+					cp.player.status.counter++;
+				}, 1000 / p._opts.fps);
+				if (p.audio) {
+					p.audio.play();
+				}
+				s.played = true;
+				s.playing = true;
+
 				break;
 			case 'video':
 				break;
@@ -171,11 +174,31 @@
 		pause: function (callback) {
 			this.status.last = this.status.current;
 			this.status.playing = false;
-			this.audio.pause();
+			if (this.audio) {
+				this.audio.pause();
+			}
 			window.clearInterval(this.timer);
 			if (typeof callback === "function") {
 				callback();
 			}
+		},
+		jumpto: function (index, keep, callback) {
+			if (this._opts.resources[index] === undefined || index === undefined || index === null || index === '') {
+				console.log('Specified resources is not exist. Please set a valid index value');
+				return;
+			}
+			this.pause();
+			this.now = this._opts.resources[index];
+			if (!keep) {
+				this.status.current = 0;
+			}
+			this.play(index);
+		},
+		next: function (callback) {
+			this.jumpto(++this.videoid);
+		},
+		previous: function (callback) {
+			this.jumpto(--this.videoid);
 		},
 		buffering: function (callback) {
 			if (typeof this.bufferCallback === "function") {
@@ -196,10 +219,9 @@
 		},
 		ended: function (callback) {
 			this.audio.currentTime = 0;
-			if (this._opts.resources.length > 1) {
-				this._opts.resources.splice(0, 1);
+			if (this._opts.resources.length > this.videoid) {
 				this.status.current = 0;
-				this.play();
+				this.play(++this.videoid);
 				return;
 			}
 			this.status.current = 0;

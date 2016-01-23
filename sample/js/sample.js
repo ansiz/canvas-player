@@ -38,31 +38,27 @@ $(document).ready(function () {
 		selector: 'canvas2',
 		resources: [{
 			type: "bigImg",
-			col:10,
-			row:10,
+			col: 10,
+			row: 10,
 			src: "resources/images/big",
-			count: 3,
+			count: 1,
 			bit: 3,
 			wildcard: "out_",
 			fileType: "jpg",
 			manifest: []
+		}, {
+			type: "bigImg",
+			col: 10,
+			row: 10,
+			src: "resources/images/big",
+			count: 1,
+			bit: 3,
+			wildcard: "out1_",
+			fileType: "jpg",
+			manifest: []
 		}]
 	});
-	// canvasPlayer1 = new cp.initPlayer({
-	// 	id: 'canvasPlayer2',
-	// 	selector: 'canvas2',
-	// 	width: 400,
-	// 	height: 300,
-	// 	type: "images",
-	// 	resources: {
-	// 		src: "resources/images",
-	// 		count: 341,
-	// 		bit: 3,
-	// 		wildcard: "out_",
-	// 		fileType: "jpg",
-	// 		manifest: []
-	// 	}
-	// });
+
 	$('#btn-video-play').click(function () {
 		video.play();
 	});
@@ -86,6 +82,15 @@ $(document).ready(function () {
 
 	$('#btn-big-pause').click(function () {
 		canvasPlayer.pause();
+	});
+
+	$('#btn-big-previous').click(function () {
+		canvasPlayer.jumpto(0);
+	});
+
+
+	$('#btn-big-next').click(function () {
+		canvasPlayer.jumpto(1);
 	});
 	// $('#btn-big-play').click(function () {
 	// 	canvasPlayer1.load();
