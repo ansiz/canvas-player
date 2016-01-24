@@ -87,10 +87,10 @@
 		play: function (index, callback) {
 			var p = cp.player;
 			var s = p.status;
-			p.audio = document.getElementById(p._opts.audio + index);
 			if (!index) {
 				index = 0;
 			}
+			p.audio = document.getElementById(p._opts.audio + index);
 			p.now = p._opts.resources[index];
 			p.videoid = index;
 			if (p.status.playing === true) return;
