@@ -190,7 +190,7 @@
 			this.pause();
 			this.now = this._opts.resources[index];
 			if (!keep) {
-				this.status.current = 0;
+				this.status.counter = 0;
 			}
 			this.play(index);
 		},
