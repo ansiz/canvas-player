@@ -193,12 +193,21 @@
 				this.status.counter = 0;
 			}
 			this.play(index);
+			if (typeof callback === "function") {
+				callback();
+			}
 		},
 		next: function (callback) {
 			this.jumpto(++this.videoid);
+			if (typeof callback === "function") {
+				callback();
+			}
 		},
 		previous: function (callback) {
 			this.jumpto(--this.videoid);
+			if (typeof callback === "function") {
+				callback();
+			}
 		},
 		buffering: function (callback) {
 			if (typeof this.bufferCallback === "function") {
