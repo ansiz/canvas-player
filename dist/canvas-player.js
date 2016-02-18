@@ -20,6 +20,7 @@
 					wildcard: "",
 					fileType: "",
 					manifest: [],
+					loop: false,
 				}]
 			},
 			this.status = {
@@ -138,8 +139,10 @@
 				}
 				p.timer = window.setInterval(function () {
 					if (cp.player.status.current >= c.count) {
-						cp.player.pause();
-						cp.player.ended();
+						if (c.loop !== true) {
+							cp.player.pause();
+							cp.player.ended();
+						};
 						return;
 					}
 
@@ -147,13 +150,14 @@
 						fy = Math.floor(cp.player.status.counter / c.col) * cp.player._opts.height;
 
 					if (fy > cp.player._opts.height * c.row) {
-						s.current++;
+						if (!c.loop)
+							s.current++;
 						cp.player.status.counter = 0;
 					}
 					p._image = p.preload.getResult(p.now.manifest[s.current].id);
-					var images = new createjs.Bitmap(p._image);
-					ctx.clearRect(0, 0, cp.player._opts.width, cp.player._opts.height); // clear frame
-					ctx.drawImage(images.image, fx, fy, cp.player._opts.width, cp.player._opts.height, 0, 0, cp.player._opts.width, cp.player._opts.height);
+					p.images = new createjs.Bitmap(p._image);
+					// ctx.clearRect(0, 0, cp.player._opts.width, cp.player._opts.height); // clear frame
+					ctx.drawImage(p.images.image, fx, fy, cp.player._opts.width, cp.player._opts.height, 0, 0, cp.player._opts.width, cp.player._opts.height);
 
 					cp.player.status.counter++;
 				}, 1000 / p._opts.fps);
