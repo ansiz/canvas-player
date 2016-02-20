@@ -139,21 +139,20 @@
 				}
 				p.timer = window.setInterval(function () {
 					if (cp.player.status.current >= c.count) {
-						if (c.loop !== true) {
-							cp.player.pause();
-							cp.player.ended();
-						};
+						cp.player.pause();
+						cp.player.ended();
 						return;
 					}
-
 					var fx = Math.floor(cp.player.status.counter % c.col) * cp.player._opts.width,
 						fy = Math.floor(cp.player.status.counter / c.col) * cp.player._opts.height;
 
-					if (fy > cp.player._opts.height * c.row) {
+					//loop
+					if (cp.player.status.counter >= c.total) {
 						if (!c.loop)
 							s.current++;
-						cp.player.status.counter = 0;
-					}
+						else
+							cp.player.status.counter = 0
+					};
 					p._image = p.preload.getResult(p.now.manifest[s.current].id);
 					p.images = new createjs.Bitmap(p._image);
 					// ctx.clearRect(0, 0, cp.player._opts.width, cp.player._opts.height); // clear frame
