@@ -143,9 +143,8 @@
 						cp.player.ended();
 						return;
 					}
-					var fx = Math.floor(cp.player.status.counter % c.col) * cp.player._opts.width,
-						fy = Math.floor(cp.player.status.counter / c.col) * cp.player._opts.height;
-
+					var fx = Math.floor(cp.player.status.counter % c.col) * p.now.width,
+						fy = Math.floor(cp.player.status.counter / c.col) * p.now.height;
 					//loop
 					if (cp.player.status.counter >= c.total) {
 						if (!c.loop)
@@ -156,7 +155,7 @@
 					p._image = p.preload.getResult(p.now.manifest[s.current].id);
 					p.images = new createjs.Bitmap(p._image);
 					// ctx.clearRect(0, 0, cp.player._opts.width, cp.player._opts.height); // clear frame
-					ctx.drawImage(p.images.image, fx, fy, cp.player._opts.width, cp.player._opts.height, 0, 0, cp.player._opts.width, cp.player._opts.height);
+					ctx.drawImage(p.images.image, fx, fy, p.now.width, p.now.height, 0, 0, cp.player._opts.width, cp.player._opts.height);
 
 					cp.player.status.counter++;
 				}, 1000 / p._opts.fps);
