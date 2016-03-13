@@ -21,7 +21,7 @@
 					fileType: "",
 					manifest: [],
 					loop: false,
-				}]
+				}],
 			},
 			this.status = {
 				loaded: false,
@@ -188,7 +188,12 @@
 				callback();
 			}
 		},
-		jumpto: function (index, keep, callback) {
+		jumpto: function (index, keep, clear, callback) {
+			cp.player.status.current = 0;
+			if (clear === true) {
+				var ctx = this.canvas.getContext('2d');
+				ctx.clearRect(0, 0, cp.player._opts.width, cp.player._opts.height); // clear frame
+			};
 			if (this._opts.resources[index] === undefined || index === undefined || index === null || index === '') {
 				console.log('Specified resources is not exist. Please set a valid index value');
 				return;
@@ -233,14 +238,17 @@
 			}
 		},
 		ended: function (callback) {
-			this.audio.currentTime = 0;
+			try {
+				this.audio.currentTime = 0;
+			} catch (e) {
+				console.log("audio error")
+			}
 			if (this._opts.resources.length > this.videoid) {
 				this.status.current = 0;
 				this.play(++this.videoid);
 				return;
 			}
 			this.status.current = 0;
-			console.log('ended');
 			if (typeof callback === "function") {
 				callback();
 			}
