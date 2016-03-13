@@ -147,10 +147,14 @@
 						fy = Math.floor(cp.player.status.counter / c.col) * p.now.height;
 					//loop
 					if (cp.player.status.counter >= c.total) {
-						if (!c.loop)
+						if (!c.loop) {
+							if (c.fragmentPause) {
+								cp.player.pause();
+							};
 							s.current++;
-						else
+						} else {
 							cp.player.status.counter = 0
+						}
 					};
 					p._image = p.preload.getResult(p.now.manifest[s.current].id);
 					p.images = new createjs.Bitmap(p._image);

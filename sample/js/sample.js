@@ -33,11 +33,13 @@ $(document).ready(function () {
 	//bigImage test
 	canvasPlayer = new cp.initPlayer({
 		id: 'canvasPlayer1',
-		width: 320,
-		height: 240,
+		width: 480,
+		height: 360,
 		selector: 'canvas2',
 		resources: [{
 			type: "bigImg",
+			height: 240,
+			width: 320,
 			col: 10,
 			row: 10,
 			src: "resources/images/big",
@@ -45,9 +47,14 @@ $(document).ready(function () {
 			bit: 3,
 			wildcard: "out_",
 			fileType: "jpg",
-			manifest: []
+			manifest: [],
+			total: 100,
+			fragmentPause: true,
+			loop: false,
 		}, {
 			type: "bigImg",
+			height: 240,
+			width: 320,
 			col: 10,
 			row: 10,
 			src: "resources/images/big",
@@ -55,7 +62,9 @@ $(document).ready(function () {
 			bit: 3,
 			wildcard: "out1_",
 			fileType: "jpg",
-			manifest: []
+			manifest: [],
+			loop: true,
+			total: 100
 		}]
 	});
 
