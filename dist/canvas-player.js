@@ -100,8 +100,12 @@
 				var ctx = p.canvas.getContext('2d');
 				p.timer = window.setInterval(function () {
 					if (p.status.current >= p.now.count) {
-						p.pause();
-						p.ended();
+						if (!p.now.loop) {
+							p.pause();
+							p.ended();
+						} else {
+							p.status.current = 0;
+						}
 						return;
 					}
 					if (s.current + p._opts.buffer < p.now.manifest.length) {
@@ -139,28 +143,30 @@
 				}
 				p.timer = window.setInterval(function () {
 					if (cp.player.status.current >= c.count) {
-						cp.player.pause();
-						cp.player.ended();
-						return;
+						//cp.player.pause();
+						//cp.player.ended();
+						if (c.fragmentPause) {
+							cp.player.pause();
+						} else {
+							cp.player.status.current = 0;
+						}
+						//return;
 					}
 					var fx = Math.floor(cp.player.status.counter % c.col) * p.now.width,
 						fy = Math.floor(cp.player.status.counter / c.col) * p.now.height;
 					//loop
 					if (cp.player.status.counter >= c.total) {
 						if (!c.loop) {
-							if (c.fragmentPause) {
-								cp.player.pause();
-							};
 							s.current++;
+							cp.player.status.counter = 0;
 						} else {
-							cp.player.status.counter = 0
+							cp.player.status.counter = 0;
 						}
 					};
 					p._image = p.preload.getResult(p.now.manifest[s.current].id);
 					p.images = new createjs.Bitmap(p._image);
-					// ctx.clearRect(0, 0, cp.player._opts.width, cp.player._opts.height); // clear frame
+					//ctx.clearRect(0, 0, cp.player._opts.width, cp.player._opts.height); // clear frame
 					ctx.drawImage(p.images.image, fx, fy, p.now.width, p.now.height, 0, 0, cp.player._opts.width, cp.player._opts.height);
-
 					cp.player.status.counter++;
 				}, 1000 / p._opts.fps);
 				if (p.audio) {
